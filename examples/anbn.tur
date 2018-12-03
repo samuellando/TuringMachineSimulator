@@ -1,0 +1,24 @@
+Step  : 1
+TapeS : 55
+LoadP : 05
+State : s t u v f
+Sigma : a b
+Gamma : a b A B _
+Start : s
+Blank : _
+Final : f
+Input : aaaaabbbbb
+sA=sAR
+sa=tAR
+ta=taR
+tB=tBR
+tb=uBL
+uB=uBL
+ua=uaL
+uA=sAR
+u_=s_R
+sB=sBR
+s_=v_L
+vB=vbL
+vA=vaL
+v_=f_R

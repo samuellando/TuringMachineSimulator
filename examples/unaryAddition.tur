@@ -1,0 +1,21 @@
+Step  : 1
+TapeS : 55
+LoadP : 05
+State : a b c d r f
+Sigma : 1 +
+Gamma : 1 + _
+Start : a
+Blank : _
+Final : f
+Input : 11111+11+11111+111+1
+a1=a1R
+a+=b1R
+b1=b1R
+b+=c+L
+b_=c_L
+c1=c1L
+c_=d_R
+d1=a_R
+a_=r_L
+r1=r1L
+r_=f_R

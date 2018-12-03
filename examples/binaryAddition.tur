@@ -1,0 +1,40 @@
+Step  : 1
+TapeS : 5F
+LoadP : 10
+State : s a b c d e r f
+Sigma : 0 1 +
+Gamma : 0 1 o l + _
+Start : s
+Blank : _
+Final : f
+Input : 110001+111100111
+s0=s0R
+s1=s1R
+so=soR
+sl=slR
+s+=s+R
+s_=a_L
+a0=b_L
+b0=b0L
+b1=b1L
+b+=c+L
+co=coL
+cl=clL
+c0=soR
+c1=slR
+c_=s0R
+a1=d0L
+d0=d0L
+d1=d1L
+d+=e+L
+eo=eoL
+el=elL
+e0=s1R
+e_=s1R
+e1=e0L
+a+=r_L
+rl=r1L
+ro=r0L
+r1=r1L
+r0=r0L
+r_=f_R
