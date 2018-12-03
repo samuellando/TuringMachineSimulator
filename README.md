@@ -1,2 +1,5 @@
 # TuringMachineSimulator
 A very basic Turing machine simulator
+
+## How it works
+This porgram behaves as an interpreter. It accepts a file of a very specific format (see the examples) as a input parameter, and simulates the specified turing machine. While it is far form perfect (ie non determiniism is not taken into account), it is a good enogh tool for verifying solutions the theoretical computer science problems.
