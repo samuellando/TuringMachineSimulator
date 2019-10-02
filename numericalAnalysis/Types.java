@@ -1,9 +1,9 @@
-class FiniteDigitDecimal {
+class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal> {
   private int power;
   private int[] digits;
   private int sign;
 
-  FiniteDigitDecimal(float n, int precision) {
+  public FiniteDigitDecimal(float n, int precision) {
     // First lets determine the sign.
     if (n < 0) sign = -1;
     else sign = 1;
@@ -13,15 +13,16 @@ class FiniteDigitDecimal {
     digits = new int[precision];
     setup(n);
   }
-  FiniteDigitDecimal(FiniteDigitDecimal n) {
+  public FiniteDigitDecimal(FiniteDigitDecimal n) {
     this.sign = n.sign;
     this.power = n.power;
     this.digits = new int[n.digits.length];
     for (int i = 0; i < this.digits.length; i++)
       this.digits[i] = n.digits[i];
   }
+  
 
-  boolean setup(float n) {
+  private void setup(float n) {
     /*
      * Setup to float such that there is only one digit before the decimal point.
      * And determine the power. 
@@ -42,16 +43,15 @@ class FiniteDigitDecimal {
       n *= 10;
     }
     round((int)n % 10);
-    return true;
   }
 
-  void round(int n) {
+  private void round(int n) {
     n += 5;
     n /= 10;
     digits[digits.length - 1] += n;
   }
 
-  void shift() {
+  private void shift() {
     for (int i = digits.length - 1; i > 0; i--) {
       if (digits[i] < 0) {
         digits[i-1] -= 1; 
@@ -72,7 +72,7 @@ class FiniteDigitDecimal {
     }
   }
 
-  boolean add(FiniteDigitDecimal n) {
+  public boolean add(FiniteDigitDecimal n) {
     if (this.digits.length != n.digits.length) 
       return false;
     boolean substraction = false;
@@ -106,7 +106,7 @@ class FiniteDigitDecimal {
     return true; 
   }
 
-  boolean multiply(FiniteDigitDecimal n) {
+  public boolean multiply(FiniteDigitDecimal n) {
     if (this.digits.length != n.digits.length) 
       return false;
     if (this.sign == -1 ^ n.sign == -1) 
@@ -136,7 +136,7 @@ class FiniteDigitDecimal {
     return true;
   }
 
-  boolean power(int n) {
+  public boolean power(int n) {
     if (n <= 1) return false;
     FiniteDigitDecimal m = new FiniteDigitDecimal(this);
     while (n > 1) {
@@ -145,7 +145,55 @@ class FiniteDigitDecimal {
     } 
     return true;
   }
+  // java.lang.Comparable overrides.
+  @Override
+  public int compareTo(FiniteDigitDecimal n) {
+    if (this.sign != n.sign) return this.sign;
+    if (this.power != n.power) return this.power - n.power;
 
+    int c;
+    if (this.digits.length < n.digits.length)
+      c = this.digits.length;
+    else
+      c = n.digits.length;
+
+    for (int i = 0; i < c; i++)
+      if (this.digits[i] != n.digits[i]) 
+        return this.digits[i] - n.digits[i];
+    return 0;
+  }
+  // java.lang.Number overrides.
+  @Override
+  public double doubleValue() {
+    double n = 0;
+    for (int i = this.digits.length - 1; i >= 0; i++) {
+      n += 0.1 * this.digits[i];
+      n /= 10;
+    }
+    for (int i = power; i != 0;)
+      if (i > 0) {
+        n *= 10;
+        i--;
+      } else {
+        n /= 10;
+        i++;
+      }
+    return n;
+  }
+  @Override
+  public float floatValue() {
+    return (float)doubleValue();
+  }
+  @Override
+  public int intValue() {
+    return (int)doubleValue();
+  }
+  @Override
+  public long longValue() {
+    return (long)doubleValue();
+  }
+  // java.Object overrides.
+  @Override
   public String toString() {
     String out = "";
     for (int i = 0; i < digits.length; i++)
@@ -158,5 +206,15 @@ class FiniteDigitDecimal {
       out = "0."+out;
     }
     return ((sign == -1)?"-":"")+out;
+  }
+  @Override
+  public FiniteDigitDecimal clone() {
+    return new FiniteDigitDecimal(this);
+  }
+  @Override
+  public boolean equals(Object n) {
+    if (!(n instanceof FiniteDigitDecimal)) return false;
+    FiniteDigitDecimal nFDD = (FiniteDigitDecimal)n;
+    return compareTo(nFDD) == 0;
   }
 }
