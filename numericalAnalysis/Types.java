@@ -13,6 +13,13 @@ class FiniteDigitDecimal {
     digits = new int[precision];
     setup(n);
   }
+  FiniteDigitDecimal(FiniteDigitDecimal n) {
+    this.sign = n.sign;
+    this.power = n.power;
+    this.digits = new int[n.digits.length];
+    for (int i = 0; i < this.digits.length; i++)
+      this.digits[i] = n.digits[i];
+  }
 
   boolean setup(float n) {
     /*
@@ -107,8 +114,8 @@ class FiniteDigitDecimal {
     else
       this.sign = 1;
     // Convert the operands to integers.
-    int i0 = 0;
-    int i1 = 0;
+    long i0 = 0;
+    long i1 = 0;
     // Determine the new power. 
     int powSum = this.power + n.power;
     for (int i = 0; i < this.digits.length; i++) {
@@ -119,7 +126,6 @@ class FiniteDigitDecimal {
     }
     i0 /= 10;
     i1 /= 10;
-
     i0 *= i1;
 
     // Load the product of integers into digits.
@@ -127,6 +133,16 @@ class FiniteDigitDecimal {
     // Determine the new power.
     this.power -= 2*digits.length;
     this.power += powSum;
+    return true;
+  }
+
+  boolean power(int n) {
+    if (n <= 1) return false;
+    FiniteDigitDecimal m = new FiniteDigitDecimal(this);
+    while (n > 1) {
+      this.multiply(m);
+      n--;
+    } 
     return true;
   }
 
