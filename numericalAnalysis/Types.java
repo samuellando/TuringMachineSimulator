@@ -72,54 +72,56 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     }
   }
 
-  public boolean add(FiniteDigitDecimal n) {
+  public FiniteDigitDecimal add(FiniteDigitDecimal n) {
     if (this.digits.length != n.digits.length) 
-      return false;
+      return null;
     boolean substraction = false;
     if (this.sign == -1 ^ n.sign == -1) 
       substraction = true;
     // Make the number with the highest power the dominant one.
-    if (n.power > this.power) {
-      int[] temp0 = this.digits;
-      int temp1 = this.power;
-      int temp2 = this.sign;
-      this.digits = n.digits;
+    FiniteDigitDecimal t = this.clone();
+    if (n.power > t.power) {
+      int[] temp0 = t.digits;
+      int temp1 = t.power;
+      int temp2 = t.sign;
+      t.digits = n.digits;
       n.digits = temp0;
-      this.power = n.power;
+      t.power = n.power;
       n.power = temp1;
-      this.sign = n.sign;
+      t.sign = n.sign;
       n.sign = temp2;
     }
     // Add the overlapping elements.
-    int overlap = this.digits.length - (this.power - n.power);
+    int overlap = t.digits.length - (t.power - n.power);
     for (int i = 0; i < overlap; i++) {
       if (substraction)
-        this.digits[this.digits.length - overlap + i] -= n.digits[i];
+        t.digits[t.digits.length - overlap + i] -= n.digits[i];
       else
-        this.digits[this.digits.length - overlap + i] += n.digits[i];
+        t.digits[t.digits.length - overlap + i] += n.digits[i];
     }
     // Preform a shift.
-    shift();
+    t.shift();
     // If there is an extra element, round.
-    if (overlap < this.digits.length)
-      round(this.digits[overlap]);
-    return true; 
+    if (overlap < t.digits.length)
+      round(t.digits[overlap]);
+    return t; 
   }
 
-  public boolean multiply(FiniteDigitDecimal n) {
-    if (this.digits.length != n.digits.length) 
-      return false;
-    if (this.sign == -1 ^ n.sign == -1) 
-      this.sign = -1;
+  public FiniteDigitDecimal multiply(FiniteDigitDecimal n) {
+    FiniteDigitDecimal t = this.clone();
+    if (t.digits.length != n.digits.length) 
+      return null;
+    if (t.sign == -1 ^ n.sign == -1) 
+      t.sign = -1;
     else
-      this.sign = 1;
+      t.sign = 1;
     // Convert the operands to integers.
     long i0 = 0;
     long i1 = 0;
     // Determine the new power. 
-    int powSum = this.power + n.power;
-    for (int i = 0; i < this.digits.length; i++) {
-      i0 += this.digits[i];
+    int powSum = t.power + n.power;
+    for (int i = 0; i < t.digits.length; i++) {
+      i0 += t.digits[i];
       i1 += n.digits[i];
       i0 *= 10;
       i1 *= 10;
@@ -131,19 +133,19 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     // Load the product of integers into digits.
     setup(i0);
     // Determine the new power.
-    this.power -= 2*digits.length;
-    this.power += powSum;
-    return true;
+    t.power -= 2*digits.length;
+    t.power += powSum;
+    return t;
   }
 
-  public boolean power(int n) {
-    if (n <= 1) return false;
-    FiniteDigitDecimal m = new FiniteDigitDecimal(this);
+  public FiniteDigitDecimal power(int n) {
+    if (n <= 1) return null;
+    FiniteDigitDecimal m = this.clone();
     while (n > 1) {
-      this.multiply(m);
+      m = m.multiply(this);
       n--;
     } 
-    return true;
+    return m;
   }
   // java.lang.Comparable overrides.
   @Override
