@@ -13,6 +13,13 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     digits = new int[precision];
     setup(n);
   }
+  public FiniteDigitDeciaml(int sign, int[] digits, int power) {
+    this.sign = sign;
+    this.digits = new int[digits.length];
+    for (int i = 0; i < digits.length; i++)
+      this.dihgits[i] = digits[i];
+    this.power = power;
+  }
   public FiniteDigitDecimal(FiniteDigitDecimal n) {
     this.sign = n.sign;
     this.power = n.power;
