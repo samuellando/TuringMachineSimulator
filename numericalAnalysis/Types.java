@@ -3,7 +3,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   private int[] digits;
   private int sign;
 
-  public FiniteDigitDecimal(float n, int precision) {
+  public FiniteDigitDecimal(double n, int precision) {
     // First lets determine the sign.
     if (n < 0) sign = -1;
     else sign = 1;
@@ -22,7 +22,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   }
   
 
-  private void setup(float n) {
+  private void setup(double n) {
     /*
      * Setup to float such that there is only one digit before the decimal point.
      * And determine the power. 
@@ -138,6 +138,13 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     return t;
   }
 
+  public FiniteDigitDecimal divide(FiniteDigitDecimal n) {
+    return new FiniteDigitDecimal(
+                                  this.doubleValue() / n.doubleValue(), 
+                                  this.digits.length
+                                 );
+  }
+
   public FiniteDigitDecimal power(int n) {
     if (n <= 1) return null;
     FiniteDigitDecimal m = this.clone();
@@ -168,7 +175,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   @Override
   public double doubleValue() {
     double n = 0;
-    for (int i = this.digits.length - 1; i >= 0; i++) {
+    for (int i = this.digits.length - 1; i >= 0; i--) {
       n += 0.1 * this.digits[i];
       n /= 10;
     }
