@@ -150,7 +150,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     i0 *= i1;
 
     // Load the product of integers into digits.
-    setup(i0);
+    t.setup(i0);
     // Determine the new power.
     t.power -= 2*digits.length;
     t.power += powSum;
@@ -168,7 +168,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   }
 
   public FiniteDigitDecimal power(int n) {
-    if (n <= 1) return null;
+    if (n < 1) return null;
     FiniteDigitDecimal m = this.clone();
     while (n > 1) {
       m = m.multiply(this);
@@ -209,7 +209,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
         n /= 10;
         i++;
       }
-    return n;
+    return sign*n;
   }
   @Override
   public float floatValue() {
