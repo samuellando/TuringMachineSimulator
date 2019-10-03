@@ -13,11 +13,11 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     digits = new int[precision];
     setup(n);
   }
-  public FiniteDigitDeciaml(int sign, int[] digits, int power) {
+  public FiniteDigitDecimal(int sign, int[] digits, int power) {
     this.sign = sign;
     this.digits = new int[digits.length];
     for (int i = 0; i < digits.length; i++)
-      this.dihgits[i] = digits[i];
+      this.digits[i] = digits[i];
     this.power = power;
   }
   public FiniteDigitDecimal(FiniteDigitDecimal n) {
@@ -79,9 +79,17 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     }
   }
 
+  private void updatePrecision(int n) {
+    int[] newDigits = new int[n];
+    for (int i = 0; i < n; i++)
+      newDigits[i] = digits[i];
+    int[] oldDigits = this.digits;
+    this.digits = newDigits;
+    if (oldDigits.length > n)
+      round(oldDigits[n]);
+  }
+
   public FiniteDigitDecimal add(FiniteDigitDecimal n) {
-    if (this.digits.length != n.digits.length) 
-      return null;
     boolean substraction = false;
     if (this.sign == -1 ^ n.sign == -1) 
       substraction = true;
@@ -98,6 +106,8 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       t.sign = n.sign;
       n.sign = temp2;
     }
+    if (t.digits.length > n.digits.length) 
+      t.updatePrecision(n.digits.length);
     // Add the overlapping elements.
     int overlap = t.digits.length - (t.power - n.power);
     for (int i = 0; i < overlap; i++) {
@@ -116,8 +126,10 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
 
   public FiniteDigitDecimal multiply(FiniteDigitDecimal n) {
     FiniteDigitDecimal t = this.clone();
-    if (t.digits.length != n.digits.length) 
-      return null;
+
+    if (t.digits.length > n.digits.length) 
+      t.updatePrecision(n.digits.length);
+
     if (t.sign == -1 ^ n.sign == -1) 
       t.sign = -1;
     else
@@ -146,9 +158,12 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   }
 
   public FiniteDigitDecimal divide(FiniteDigitDecimal n) {
+    FiniteDigitDecimal t = this.clone();
+    if (t.digits.length > n.digits.length) 
+      t.updatePrecision(n.digits.length);
     return new FiniteDigitDecimal(
-                                  this.doubleValue() / n.doubleValue(), 
-                                  this.digits.length
+                                  t.doubleValue() / n.doubleValue(), 
+                                  t.digits.length
                                  );
   }
 
