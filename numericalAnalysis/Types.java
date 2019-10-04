@@ -123,6 +123,13 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       round(oldDigits[n]);
   }
   /**
+   * Accessor for the sign of the decimal.
+   * @return -1 or 1.
+   */
+  public int sign() {
+    return sign;
+  }
+  /**
    * Take the sum of this and another decimal.
    * @param n The other decimal.
    * @return The sum.
