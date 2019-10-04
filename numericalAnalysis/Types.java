@@ -225,11 +225,15 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
    * @return x^n.
    */
   public FiniteDigitDecimal power(int n) {
-    if (n < 1) return null;
     FiniteDigitDecimal m = this.clone();
-    while (n > 1) {
-      m = m.multiply(this);
-      n--;
+    while (n != 1) {
+      if (n > 1) {
+        m = m.multiply(this);
+        n--;
+      } else {
+        m = m.divide(this);
+        n++;
+      }
     } 
     return m;
   }
