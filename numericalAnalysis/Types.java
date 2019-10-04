@@ -1,8 +1,19 @@
+/**
+ * This class implements a decimal number with a fixed number of significant
+ * figures.
+ *
+ * @author Samuel Lando
+ * @since 2019-10-04
+ */
 class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal> {
   private int power;
   private int[] digits;
   private int sign;
-
+  /**
+   * Convert double to a FiniteDigitDecimal with specify precission.
+   * @param n The value to load.
+   * @param precision The number of significant figures to keep.
+   */
   public FiniteDigitDecimal(double n, int precision) {
     // First lets determine the sign.
     if (n < 0) sign = -1;
@@ -11,8 +22,14 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     n *= sign;
 
     digits = new int[precision];
-    setup(n);
+    load(n);
   }
+  /**
+   * The fully parameteraized constructor.
+   * @param sign The parity of the dicimal.
+   * @param digits The digits of the decimal.
+   * @param power The power of the decimal in leading point form.
+   */
   public FiniteDigitDecimal(int sign, int[] digits, int power) {
     this.sign = sign;
     this.digits = new int[digits.length];
@@ -20,6 +37,10 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       this.digits[i] = digits[i];
     this.power = power;
   }
+  /**
+   * The copy constructor.
+   * @param n The value to copy.
+   */
   public FiniteDigitDecimal(FiniteDigitDecimal n) {
     this.sign = n.sign;
     this.power = n.power;
@@ -28,12 +49,12 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       this.digits[i] = n.digits[i];
   }
   
-
-  private void setup(double n) {
-    /*
-     * Setup to float such that there is only one digit before the decimal point.
-     * And determine the power. 
-     */ 
+  /**
+   * Load a double into the digits array.
+   * @param n The double that needs to be loaded
+   */
+  private void load(double n) {
+    // Set up the float in scientific notation form.
     power = 0;
     while (n > 1) {
       n /= 10;
@@ -44,6 +65,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       power--;
     }
     power++;
+
     // Extract the digits form the float.
     for (int i = 0; i < digits.length; i++) {
       digits[i] = (int)n % 10;
@@ -51,14 +73,22 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     }
     round((int)n % 10);
   }
-
+  /**
+   * Given the first digit beyond the precision of the decimal, round.
+   * @param n The first digit beyond the precision of the decimal.
+   */
   private void round(int n) {
+    // If n + 5 > 10, we will round up.
     n += 5;
     n /= 10;
     digits[digits.length - 1] += n;
+    shift();
   }
-
+  /**
+   * Tranforms the decimal array such that every digit is less than 10.
+   */
   private void shift() {
+    // Do all the digits except for the first.
     for (int i = digits.length - 1; i > 0; i--) {
       if (digits[i] < 0) {
         digits[i-1] -= 1; 
@@ -68,6 +98,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
         digits[i] = digits[i] % 10;
       }
     }
+    // If the first needs to be shifted, we need to insert a 1 at the beggining.
     if (digits[0] >= 10) {
       power++;
       int over = digits[digits.length - 1];
@@ -78,7 +109,10 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       round(over);
     }
   }
-
+  /**
+   * Update the precision of the decimal so it carries more or less sigfigs.
+   * @param n The new precision.
+   */
   private void updatePrecision(int n) {
     int[] newDigits = new int[n];
     for (int i = 0; i < n; i++)
@@ -88,7 +122,11 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     if (oldDigits.length > n)
       round(oldDigits[n]);
   }
-
+  /**
+   * Take the sum of this and another decimal.
+   * @param n The other decimal.
+   * @return The sum.
+   */
   public FiniteDigitDecimal add(FiniteDigitDecimal n) {
     boolean substraction = false;
     if (this.sign == -1 ^ n.sign == -1) 
@@ -123,7 +161,11 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       round(t.digits[overlap]);
     return t; 
   }
-
+  /**
+   * Take the product of this and another decimal.
+   * @param n The other decimal.
+   * @return The product.
+   */
   public FiniteDigitDecimal multiply(FiniteDigitDecimal n) {
     FiniteDigitDecimal t = this.clone();
 
@@ -150,13 +192,17 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     i0 *= i1;
 
     // Load the product of integers into digits.
-    t.setup(i0);
+    t.load(i0);
     // Determine the new power.
     t.power -= 2*digits.length;
     t.power += powSum;
     return t;
   }
-
+  /**
+   * Take the quotient of this and another decimal.
+   * @param n The other decimal.
+   * @return The quotient.
+   */
   public FiniteDigitDecimal divide(FiniteDigitDecimal n) {
     FiniteDigitDecimal t = this.clone();
     if (t.digits.length > n.digits.length) 
@@ -166,7 +212,11 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
                                   t.digits.length
                                  );
   }
-
+  /**
+   * Take the power of this decimal.
+   * @param n The exponent.
+   * @return x^n.
+   */
   public FiniteDigitDecimal power(int n) {
     if (n < 1) return null;
     FiniteDigitDecimal m = this.clone();
@@ -176,6 +226,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     } 
     return m;
   }
+
   // java.lang.Comparable overrides.
   @Override
   public int compareTo(FiniteDigitDecimal n) {
@@ -193,6 +244,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
         return this.digits[i] - n.digits[i];
     return 0;
   }
+
   // java.lang.Number overrides.
   @Override
   public double doubleValue() {
@@ -223,6 +275,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   public long longValue() {
     return (long)doubleValue();
   }
+  
   // java.Object overrides.
   @Override
   public String toString() {
