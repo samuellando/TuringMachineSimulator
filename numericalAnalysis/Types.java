@@ -169,6 +169,16 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     return t; 
   }
   /**
+   * Take the difference of this and another decimal.
+   * @param n The other decimal.
+   * @return The sum.
+   */
+  public FiniteDigitDecimal substract(FiniteDigitDecimal n) {
+    FiniteDigitDecimal nt = n.clone();
+    nt.sign = nt.sign * -1;
+    return add(nt);
+  }
+  /**
    * Take the product of this and another decimal.
    * @param n The other decimal.
    * @return The product.
@@ -236,6 +246,15 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       }
     } 
     return m;
+  }
+  /**
+   * Determine the absolute value of this decimal.
+   * @return |this|.
+   */
+  public FiniteDigitDecimal abs() {
+    FiniteDigitDecimal t = this.clone();
+    t.sign = 1;
+    return t;
   }
 
   // java.lang.Comparable overrides.
