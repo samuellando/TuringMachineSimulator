@@ -1,11 +1,22 @@
-public class Algorithms {
-  public static void main(String[] args) {
-    double pi = 3.14159;
-    FiniteDigitDecimal fpi = new FiniteDigitDecimal(pi, 6);
-    FiniteDigitDecimal f2 = new FiniteDigitDecimal(2, 7);
-    FiniteDigitDecimal f120 = new FiniteDigitDecimal(120, 7);
-    FiniteDigitDecimal f6 = new FiniteDigitDecimal(-6, 7);
-    FiniteDigitDecimal sinpid2 = fpi.divide(f2).power(5).divide(f120).add(fpi.divide(f2).power(3).divide(f6)).add(fpi.divide(f2));
-    System.out.println(sinpid2);
+import java.lang.reflect.Method;
+
+class Basic {
+  public static FiniteDigitDecimal bisectionMethod(Method f, FiniteDigitDecimal a, FiniteDigitDecimal b, FiniteDigitDecimal tol, int n) {
+    final FiniteDigitDecimal f2 = new FiniteDigitDecimal(2, 1000);
+    FiniteDigitDecimal pn;
+    FiniteDigitDecimal pnmin1 = a.clone();
+    for (int i = 0; i < n; i++) {
+      pn = a.add(b).divide(f2);
+
+      if (pn.substract(pnmin1).abs().compareTo(tol) < 0)
+        return pn;
+
+      if (a.sign()*pn.sign() < 0)
+        b = pn;
+      else
+        a = pn;
+      pnmin1 = pn;
+    }
+    return null;
   }
 }
