@@ -10,11 +10,15 @@ class Basic {
 
       if (pn.substract(pnmin1).abs().compareTo(tol) < 0)
         return pn;
-
-      if (a.sign()*pn.sign() < 0)
-        b = pn;
-      else
-        a = pn;
+      try {
+        if (((FiniteDigitDecimal)f.invoke(null, a)).sign()*((FiniteDigitDecimal)f.invoke(null, pn)).sign() < 0)
+          b = pn;
+        else
+          a = pn;
+      } catch (Exception e) {
+        System.out.println("Problem with f");
+        System.exit(-1);
+      }
       pnmin1 = pn;
     }
     return null;
