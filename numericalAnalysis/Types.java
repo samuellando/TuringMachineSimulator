@@ -156,11 +156,9 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       else
         t.digits[t.digits.length - overlap + i] += n.digits[i];
     }
-    // Preform a shift.
-    t.shift();
     // If there is an extra element, round.
     if (overlap < t.digits.length)
-      round(t.digits[overlap]);
+      t.round(t.digits[overlap]);
     return t; 
   }
   /**
@@ -208,6 +206,8 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     // Determine the new power.
     t.power -= 2*digits.length;
     t.power += powSum;
+    if (digits[0] == 0) 
+      t.power = 0;
     return t;
   }
   /**
