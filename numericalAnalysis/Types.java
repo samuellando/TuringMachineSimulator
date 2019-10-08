@@ -22,8 +22,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
     n *= sign;
 
     digits = new int[precision];
-    if  (n > 0) 
-      load(n);
+    load(n);
   }
   /**
    * The fully parameteraized constructor.
@@ -57,6 +56,7 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
   private void load(double n) {
     // Set up the float in scientific notation form.
     power = 0;
+    if (n == 0) return;
     while (n > 1) {
       n /= 10;
       power++;
