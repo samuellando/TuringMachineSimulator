@@ -3,7 +3,7 @@
  * figures.
  *
  * @author Samuel Lando
- * @since 2019-10-04
+ * @since 2019-10-08
  */
 class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal> {
   private int power;
@@ -140,16 +140,10 @@ class FiniteDigitDecimal extends Number implements Comparable<FiniteDigitDecimal
       substraction = true;
     // Make the number with the highest power the dominant one.
     FiniteDigitDecimal t = this.clone();
-    if (n.power > t.power) {
-      int[] temp0 = t.digits;
-      int temp1 = t.power;
-      int temp2 = t.sign;
-      t.digits = n.digits;
-      n.digits = temp0;
-      t.power = n.power;
-      n.power = temp1;
-      t.sign = n.sign;
-      n.sign = temp2;
+    if (n.power > t.power || (n.power == t.power && n.digits[0] > t.digits[0])) {
+      FiniteDigitDecimal temp = t;
+      t = n;
+      n = temp;
     }
     if (t.digits.length > n.digits.length) 
       t.updatePrecision(n.digits.length);

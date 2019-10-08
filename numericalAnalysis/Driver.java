@@ -6,9 +6,10 @@ public class Driver {
   }
 
   public static void main(String[] args) {
-    FiniteDigitDecimal a = new FiniteDigitDecimal(-1, 5);
-    FiniteDigitDecimal b = new FiniteDigitDecimal(3, 5);
-    FiniteDigitDecimal tol = new FiniteDigitDecimal(0.00001, 5);
+    FiniteDigitDecimal a = new FiniteDigitDecimal(-3, 5);
+    FiniteDigitDecimal b = new FiniteDigitDecimal(2, 5);
+    System.out.println(a.add(b));
+    /*FiniteDigitDecimal tol = new FiniteDigitDecimal(0.00001, 5);
     FiniteDigitDecimal val;
     Method f = null;
     try {
@@ -21,5 +22,6 @@ public class Driver {
       val = Basic.bisectionMethod(f, a, b, tol, i);
       System.out.println(val+" "+f(val));
     }
+    */
   }
 }
