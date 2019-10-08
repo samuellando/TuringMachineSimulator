@@ -6,9 +6,8 @@ public class Driver {
   }
 
   public static void main(String[] args) {
-    FiniteDigitDecimal a = new FiniteDigitDecimal(-3, 5);
-    FiniteDigitDecimal b = new FiniteDigitDecimal(2, 5);
-    System.out.println(a.add(b));
+    FiniteDigitDecimal a = new FiniteDigitDecimal(0, 5);
+    System.out.println(a);
     /*FiniteDigitDecimal tol = new FiniteDigitDecimal(0.00001, 5);
     FiniteDigitDecimal val;
     Method f = null;
