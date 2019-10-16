@@ -1,22 +1,22 @@
 import java.lang.reflect.Method;
+import java.lang.Math;
 
 class Basic {
-  public static FiniteDigitDecimal bisectionMethod(Method f, FiniteDigitDecimal a, FiniteDigitDecimal b, FiniteDigitDecimal tol, int n) {
-    final FiniteDigitDecimal f2 = new FiniteDigitDecimal(2, 1000);
-    FiniteDigitDecimal pn = null;
-    FiniteDigitDecimal pnmin1 = a.clone();
+  public static double bisectionMethod(Method f, double a, double b, double tol, int n) {
+    double pn = 0;
+    double pnmin1 = 0;
     for (int i = 0; i < n; i++) {
-      pn = b.add(a).divide(f2);
+      pn = (a + b)/2;
 
-      if (pn.substract(pnmin1).abs().compareTo(tol) < 0)
+      if (Math.abs(pn-pnmin1) < tol)
         return pn;
       try {
-        if (((FiniteDigitDecimal)f.invoke(null, a)).sign()*((FiniteDigitDecimal)f.invoke(null, pn)).sign() < 0)
+        if (((Double)f.invoke(null, a)).doubleValue()*((Double)f.invoke(null, pn)).doubleValue() < 0)
           b = pn;
         else
           a = pn;
       } catch (Exception e) {
-        System.out.println("Problem with f");
+        System.out.println(e);
         System.exit(-1);
       }
       pnmin1 = pn;
